@@ -19,21 +19,19 @@ namespace Liste2CourseV2.Modèle
         public List<Ingredient> GetAllIngredients()
         {
             List<Ingredient> ingredients = new List<Ingredient>();
-            string query = "SELECT ingredient.id_ingredient, ingredient.nom_ingredient, ingredient.id_type FROM ingredient INNER JOIN type_ingredient on type_ingredient.id_type = ingredient.id_type;";
+            string query = "SELECT ingredient.id_ingredient, ingredient.nom_ingredient, ingredient.id_type, type_ingredient.nom_type FROM ingredient INNER JOIN type_ingredient on type_ingredient.id_type = ingredient.id_type;";
 
             using (MySqlConnection connection = new MySqlConnection("server=localhost;Port=3306; database=Liste2Courses;uid=root;pwd=\"\";"))
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query, connection);
                 MySqlDataReader reader = command.ExecuteReader();
-                //{
                     while (reader.Read())
                     {
-                        Type_Ingredient type = new Type_Ingredient(reader.GetInt32("id_type"), reader.GetString("nom_ingredient"));
+                        Type_Ingredient type = new Type_Ingredient(reader.GetInt32(2), reader.GetString("nom_ingredient"));
                         Ingredient ingredient = new Ingredient(reader.GetInt32("id_ingredient"), reader.GetString("nom_ingredient"), type);
                         ingredients.Add(ingredient);
                     }
-                //}
                 connection.Close();
             }
 
@@ -50,16 +48,42 @@ namespace Liste2CourseV2.Modèle
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query, connection);
                 MySqlDataReader reader = command.ExecuteReader();
-                //{
                     while (reader.Read())
                     {
                         Course course = new Course(reader.GetInt32("id_course"), reader.GetString("nom_course"));
                         courses.Add(course);
                     }
-                //}
             }
 
             return courses;
+        }
+
+        public List<Ingredient> GetAllIngredientsFromCourse(int idCourse)
+        {
+            List<Ingredient> ingredients = new List<Ingredient>();
+            string query = "SELECT faire.id_ingredient, ingredient.nom_ingredient, type_ingredient.nom_type, type_ingredient.id_type, faire.quantite " +
+                "faire.id_course, faire.dateDuJour FROM faire " +
+                "INNER JOIN course ON faire.id_course = course.id_course INNER JOIN ingredient ON faire.id_ingredient = ingredient.id_ingredient " +
+                "INNER JOIN type_ingredient ON ingredient.id_type = type_ingredient.id_type " +
+                "WHERE faire.id_course = @id_course";
+
+            using (MySqlConnection connection = new MySqlConnection("server=localhost;Port=3306; database=Liste2Courses;uid=root;pwd=\"\";"))
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id_course", idCourse);
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Type_Ingredient type = new Type_Ingredient(reader.GetInt32(3), reader.GetString(2));
+                    Faire faire = new Faire(reader.GetInt32(5), reader.GetInt32(0), reader.GetDateTime(6), reader.GetInt32(4));
+                    Ingredient ingredient = new Ingredient(reader.GetInt32(0), reader.GetString(1), type, faire);
+                    ingredients.Add(ingredient);
+                }
+                connection.Close();
+            }
+
+            return ingredients;
         }
 
         public int CreateCourse(string courseName)
@@ -70,11 +94,9 @@ namespace Liste2CourseV2.Modèle
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query, connection);
-                //{
                     command.Parameters.AddWithValue("@nom_course", courseName);
                     int courseId = Convert.ToInt32(command.ExecuteScalar());
                     return courseId;
-                //}
             }
         }
 
@@ -86,11 +108,9 @@ namespace Liste2CourseV2.Modèle
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query, connection);
-                //{
                     command.Parameters.AddWithValue("@id_course", courseId);
                     command.Parameters.AddWithValue("@id_ingredient", ingredientId);
                     command.ExecuteNonQuery();
-                //}
             }
         }
 
@@ -102,11 +122,37 @@ namespace Liste2CourseV2.Modèle
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(query, connection);
-                //{
                     command.Parameters.AddWithValue("@id_course", courseId);
                     command.Parameters.AddWithValue("@id_ingredient", ingredientId);
                     command.ExecuteNonQuery();
-                //}
+            }
+        }
+
+        public void IncreaseQuantity(int ingredientId, int courseId)
+        {
+            string query = "UPDATE faire SET quantite = quantite + 1 WHERE faire.id_course = @id_course AND id_ingredient = @id_ingredient";
+
+            using (MySqlConnection connection = new MySqlConnection("server=localhost;Port=3306; database=Liste2Courses;uid=root;pwd=\"\";"))
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id_course", courseId);
+                command.Parameters.AddWithValue("@id_ingredient", ingredientId);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public void DecreaseQuantity(int ingredientId, int courseId)
+        {
+            string query = "UPDATE faire SET quantite = quantite - 1 WHERE faire.id_course = @id_course AND id_ingredient = @id_ingredient";
+
+            using (MySqlConnection connection = new MySqlConnection("server=localhost;Port=3306; database=Liste2Courses;uid=root;pwd=\"\";"))
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.Parameters.AddWithValue("@id_course", courseId);
+                command.Parameters.AddWithValue("@id_ingredient", ingredientId);
+                command.ExecuteNonQuery();
             }
         }
     }

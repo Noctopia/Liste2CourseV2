@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             label1 = new Label();
             label2 = new Label();
             txtCourseName = new TextBox();
@@ -36,6 +37,7 @@
             label3 = new Label();
             Ajouter = new Button();
             button2 = new Button();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvIngredient).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvCourses).BeginInit();
             SuspendLayout();
@@ -114,11 +116,22 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // button1
+            // 
+            button1.Image = (Image)resources.GetObject("button1.Image");
+            button1.Location = new Point(694, 112);
+            button1.Name = "button1";
+            button1.Size = new Size(26, 23);
+            button1.TabIndex = 14;
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button1);
             Controls.Add(button2);
             Controls.Add(Ajouter);
             Controls.Add(label3);
@@ -146,5 +159,6 @@
         private Label label3;
         private Button Ajouter;
         private Button button2;
+        private Button button1;
     }
 }

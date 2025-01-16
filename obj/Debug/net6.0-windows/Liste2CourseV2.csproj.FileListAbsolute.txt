@@ -40,3 +40,4 @@ C:\Users\noemie.destombes\source\repos\Liste2CourseV2\Liste2CourseV2\obj\Debug\n
 C:\Users\noemie.destombes\source\repos\Liste2CourseV2\Liste2CourseV2\obj\Debug\net6.0-windows\Liste2CourseV2.pdb
 C:\Users\noemie.destombes\source\repos\Liste2CourseV2\Liste2CourseV2\obj\Debug\net6.0-windows\Liste2CourseV2.genruntimeconfig.cache
 C:\Users\noemie.destombes\source\repos\Liste2CourseV2\Liste2CourseV2\obj\Debug\net6.0-windows\ref\Liste2CourseV2.dll
+C:\Users\noemie.destombes\source\repos\Liste2CourseV2\Liste2CourseV2\obj\Debug\net6.0-windows\Liste2CourseV2.Properties.Resources.resources

@@ -15,7 +15,7 @@ namespace Liste2CourseV2
             repository = new Repository(dbManager);
 
             LoadIngredients();
-            LoadCourses();
+            //LoadCourses();
         }
 
         private void LoadIngredients()
@@ -40,6 +40,21 @@ namespace Liste2CourseV2
             dgvCourses.DataSource = courses;
         }
 
+        private void LoadIngredientsInCourse(int id_course)
+        {
+            List<Ingredient> ingredients = repository.GetAllIngredientsFromCourse(id_course);
+            dgvCourses.Columns.Clear();
+            dgvCourses.Columns.Add("id", "Id");
+            dgvCourses.Columns.Add("nom", "Nom");
+            dgvCourses.Columns.Add("type", "Type");
+            dgvCourses.Columns.Add("quantité", "Quantité");
+            dgvCourses.Columns[0].Visible = false;
+            foreach (Ingredient ingredient in ingredients)
+            {
+                dgvCourses.Rows.Add(ingredient.getId_ingredient(), ingredient.getNom_ingredient(), ingredient.getType().getNom_type(), ingredient.getFaire().getQuantity());
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (dgvIngredient.SelectedRows.Count > 0 && !string.IsNullOrWhiteSpace(txtCourseName.Text))
@@ -51,11 +66,23 @@ namespace Liste2CourseV2
                 // Récupère ou crée la course correspondante
                 int courseId = GetOrCreateCourse(txtCourseName.Text);
 
-                // Ajoute l'ingrédient à la course
-                repository.AddIngredientToCourse(ingredientId, courseId);
+                // Ajoute l'ingrédient à la course ou incrémente sa quantité si déjà présent dans la course
+                // if (!this.ingredient.equals(dgvCourses.getIngredient().getId()))
+                //if (dgvIngredient.Rows.Equals(dgvCourses)
+                //{
+                    repository.AddIngredientToCourse(ingredientId, courseId);
+                //} else
+                //{
+                //    repository.IncreaseQuantity(ingredientId, courseId);
+                //}
+               
 
                 // Recharge les courses pour mettre à jour l'affichage
-                LoadCourses();
+                // LoadCourses();
+                LoadIngredientsInCourse(courseId);
+            } else
+            {
+                MessageBox.Show("Veuillez entrer un nom de course");
             }
 
         }
@@ -64,16 +91,19 @@ namespace Liste2CourseV2
         {
             if (dgvCourses.SelectedRows.Count > 0)
             {
-                // Récupère l'ID de l'ingrédient et de la course depuis la ligne sélectionnée
+                // Récupère l'ID de l'ingrédient depuis la ligne sélectionnée
                 DataGridViewRow selectedRow = dgvCourses.SelectedRows[0];
                 int ingredientId = (int)selectedRow.Cells["Id"].Value;
-                int courseId = (int)selectedRow.Cells["CourseId"].Value;
+
+                // Récupère l'ID de la course affichée
+                int courseId = GetOrCreateCourse(txtCourseName.Text);
 
                 // Supprime l'ingrédient de la course
                 repository.RemoveIngredientFromCourse(ingredientId, courseId);
 
                 // Recharge les courses pour mettre à jour l'affichage
-                LoadCourses();
+                //LoadCourses();
+                LoadIngredientsInCourse(courseId);
             }
 
         }
@@ -88,6 +118,14 @@ namespace Liste2CourseV2
 
             // Retourne l'ID de la course existante ou crée une nouvelle course si elle n'existe pas
             return existingCourse?.getCourse() ?? repository.CreateCourse(courseName);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            // Récupère l'ID de la course
+            int courseId = GetOrCreateCourse(txtCourseName.Text);
+
+
         }
     }
 }
