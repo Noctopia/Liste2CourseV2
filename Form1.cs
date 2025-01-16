@@ -67,19 +67,20 @@ namespace Liste2CourseV2
                 int courseId = GetOrCreateCourse(txtCourseName.Text);
 
                 // Ajoute l'ingrédient à la course ou incrémente sa quantité si déjà présent dans la course
-                // if (!this.ingredient.equals(dgvCourses.getIngredient().getId()))
-                //if (dgvIngredient.Rows.Equals(dgvCourses)
+                // boucle foreach, récupérer toutes les lignes dgvCourses
+                //if (selectedRow.Cells["Id"].Value.Equals(s)
                 //{
                     repository.AddIngredientToCourse(ingredientId, courseId);
-                //} else
-                //{
-                //    repository.IncreaseQuantity(ingredientId, courseId);
-                //}
-               
+            //}
+            //else
+            //{
+            //    repository.IncreaseQuantity(ingredientId, courseId);
+            //}
 
-                // Recharge les courses pour mettre à jour l'affichage
-                // LoadCourses();
-                LoadIngredientsInCourse(courseId);
+
+            // Recharge les courses pour mettre à jour l'affichage
+            // LoadCourses();
+            LoadIngredientsInCourse(courseId);
             } else
             {
                 MessageBox.Show("Veuillez entrer un nom de course");
